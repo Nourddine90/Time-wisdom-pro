@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حكمة الزمن - النسخة المتطورة</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        body {
+            background: linear-gradient(145deg, #0a0c10, #12161c);
+            min-height: 100vh;
+            padding: 20px;
+            color: #eef5ff;
+        }
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+        .gold-card {
+            background: rgba(20,25,35,0.7);
+            backdrop-filter: blur(15px);
+            border-radius: 40px;
+            border: 1px solid rgba(255,215,0,0.3);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            transition: transform 0.2s;
+        }
+        .gold-card:hover {
+            transform: translateY(-5px);
+        }
+        .time-section {
+            text-align: center;
+            padding: 30px 20px;
+            margin-bottom: 30px;
+        }
+        #clock {
+            font-size: 5rem;
+            font-weight: 800;
+            letter-spacing: 8px;
+            color: #FFD966;
+            text-shadow: 0 0 20px #FFB347;
+            font-family: monospace;
+            direction: ltr;
+        }
+        .date-ar {
+            font-size: 1.5rem;
+            color: #DDD5B0;
+            margin-top: 10px;
+        }
+        .rules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .rule {
+            background: linear-gradient(135deg, rgba(255,215,0,0.08), rgba(0,0,0,0.5));
+            border-radius: 28px;
+            padding: 20px;
+            border-left: 5px solid #FFD966;
+        }
+        .rule p {
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+        .rule small {
+            color: #FFD966;
+            display: block;
+            margin-top: 12px;
+            font-style: italic;
+        }
+        .two-columns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        .column {
+            flex: 1;
+            min-width: 280px;
+        }
+        .task-input-area {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .task-input-area input, .task-input-area select, .task-input-area button {
+            padding: 12px 16px;
+            border-radius: 60px;
+            border: none;
+            background: #1E2A3A;
+            color: white;
+        }
+        .task-input-area input {
+            flex: 2;
+            background: #0F1722;
+            border: 1px solid #FFD966;
+        }
+        .task-input-area button {
+            background: #FFD966;
+            color: #0a0c10;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .task-list {
+            list-style: none;
+            margin-top: 15px;
+            max-height: 350px;
+            overflow-y: auto;
+        }
+        .task-item {
+            background: rgba(30,40,50,0.6);
+            margin-bottom: 12px;
+            padding: 12px 18px;
+            border-radius: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .priority-high { border-right: 4px solid #E63946; }
+        .priority-medium { border-right: 4px solid #FFB347; }
+        .priority-low { border-right: 4px solid #2E8B57; }
+        .task-text { flex: 2; font-weight: 500; }
+        .task-actions button {
+            background: none;
+            border: none;
+            color: #FFD966;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        .profile-card {
+            padding: 20px;
+            border-radius: 32px;
+        }
+        .info-row {
+            margin: 12px 0;
+            padding: 8px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 28px;
+        }
+        .edit-btn, .subscribe-btn {
+            background: #FFD966;
+            color: #1E2A3A;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 15px;
+            width: 100%;
+        }
+        .subscribe-btn {
+            background: #2E8B57;
+            color: white;
+            margin-top: 10px;
+        }
+        .quiz-modal, .subscribe-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .quiz-card, .subscribe-card {
+            background: #10161e;
+            border-radius: 48px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            border: 1px solid #FFD966;
+        }
+        .quiz-card input, .subscribe-card input {
+            width: 100%;
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 30px;
+            border: none;
+            background: #1E2A3A;
+            color: white;
+        }
+        .quiz-card button, .subscribe-card button {
+            background: #FFD966;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .membership-badge {
+            background: #2E8B57;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: inline-block;
+            margin-left: 10px;
+        }
+        .hidden { display: none; }
+        .footer-note {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+        @media (max-width: 600px) {
+            #clock { font-size: 2.8rem; letter-spacing: 4px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="gold-card time-section">
+        <div id="clock">--:--:--</div>
+        <div class="date-ar" id="fullDate">جاري التحميل...</div>
+    </div>
+
+    <div class="rules-grid">
+        <div class="rule"><p>⚡ "الوقت كالسيف إن لم تقطعه قطعك."</p><small>— قاعدة الزمن</small></div>
+        <div class="rule"><p>🏆 "الأولويات تحدد المصير: ركز على الأهم أولاً."</p><small>قاعدة النجاح</small></div>
+        <div class="rule"><p>🌱 "كل يوم هو صفحة بيضاء، اكتب فيها ما يليق بعمرك."</p><small>حكمة يومية</small></div>
+        <div class="rule"><p>🎯 "لا تؤجل عمل اليوم إلى الغد – الفرص لا تنتظر."</p><small>قاعدة إنتاجية</small></div>
+    </div>
+
+    <div class="two-columns">
+        <div class="gold-card column" style="padding: 20px;">
+            <h2 style="color:#FFD966;">📋 مهامك الذكية</h2>
+            <div class="task-input-area">
+                <input type="text" id="taskName" placeholder="أضف مهمة جديدة...">
+                <select id="taskPriority">
+                    <option value="high">عاجل (مرتفع)</option>
+                    <option value="medium">مهم (متوسط)</option>
+                    <option value="low">عادي (منخفض)</option>
+                </select>
+                <button id="addTaskBtn">➕ إضافة</button>
+            </div>
+            <ul class="task-list" id="taskList"></ul>
+        </div>
+
+        <div class="gold-card column" style="padding: 20px;">
+            <h2 style="color:#FFD966;">👤 ملفي الزمني</h2>
+            <div id="userInfoDisplay">
+                <div class="info-row">✨ الاسم: <span id="userName">غير محدد</span></div>
+                <div class="info-row">🎯 هدفي الأساسي: <span id="userGoal">غير محدد</span></div>
+                <div class="info-row" id="membershipRow">⭐ العضوية: <span id="membershipStatus">عادية</span></div>
+                <div class="info-row">💡 نصيحة مخصصة: <span id="customAdvice">أكمل بياناتك</span></div>
+            </div>
+            <button id="editProfileBtn" class="edit-btn">✏️ تحديث معلوماتي</button>
+            <button id="subscribeBtn" class="subscribe-btn">⭐ اشترك في العضوية الذهبية</button>
+        </div>
+    </div>
+
+    <div class="gold-card" style="padding: 20px; text-align: center;">
+        <p>💎 نصيحة اليوم بحسب أولوياتك:</p>
+        <p id="dynamicAdvice" style="color:#FFD966;">خصص وقتاً للمهم الأهم الآن.</p>
+    </div>
+
+    <div class="gold-card" style="padding: 20px; text-align: center; margin-top: 20px;">
+        <h3 style="color:#FFD966;">☕ ادعم تطوير التطبيق</h3>
+        <p>دعمك يساعدني على إضافة ميزات جديدة وتحسين التطبيق</p>
+        <a href="https://ko-fi.com/nourdine90" target="_blank" style="background: #FF5E5E; color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: bold; display: inline-block; margin: 10px 0;">
+            ❤️ دعم عبر Ko-fi
+        </a>
+        <p style="font-size: 12px;">أي مبلغ يساعد في التطوير</p>
+    </div>
+
+    <div class="footer-note">
+        ⏳ كل ثانية تستحق الحكمة – تطوير <strong>نور الدين 90</strong> | النسخة المتطورة
+    </div>
+</div>
+
+<div id="quizModal" class="quiz-modal hidden">
+    <div class="quiz-card">
+        <h2 style="color:#FFD966;">📝 أسئلة ذهبية</h2>
+        <p>أسئلة لتخصيص تجربتك:</p>
+        <input type="text" id="qName" placeholder="ما اسمك؟">
+        <input type="text" id="qGoal" placeholder="ما هدفك الأكبر في الحياة؟">
+        <button id="saveAnswers">حفظ وبدء الرحلة</button>
+    </div>
+</div>
+
+<div id="subscribeModal" class="subscribe-modal hidden">
+    <div class="subscribe-card">
+        <h2 style="color:#FFD966;">⭐ العضوية الذهبية ⭐</h2>
+        <p>مميزات العضوية:</p>
+        <ul style="margin: 15px 0; padding-right: 20px;">
+            <li>✨ حفظ غير محدود للمهام</li>
+            <li>✨ إحصائيات متقدمة للإنجازات</li>
+            <li>✨ تصدير المهام إلى PDF</li>
+            <li>✨ دعم الأولوية في الرد على الاستفسارات</li>
+        </ul>
+        <p style="color:#FFD966; font-size: 1.5rem; text-align: center;">$2.99 / شهرياً</p>
+        <button id="subscribeConfirmBtn" style="background: #2E8B57; margin-top: 10px;">⭐ اشترك الآن</button>
+        <button id="closeSubscribeModal" style="background: #444; margin-top: 10px;">إغلاق</button>
+    </div>
+</div>
+
+<script>
+    const STORAGE_TASKS = "timewisdom_tasks_v2";
+    const STORAGE_USER = "timewisdom_user_v2";
+    let tasks = [];
+    let userProfile = { name: "", goal: "", membership: false, lastAsked: null };
+
+    function loadData() {
+        const storedTasks = localStorage.getItem(STORAGE_TASKS);
+        if(storedTasks) tasks = JSON.parse(storedTasks);
+        else tasks = [
+            { id: Date.now()+1, text: "✨ وضع الأهداف العظمى للأسبوع", priority: "high" },
+            { id: Date.now()+2, text: "📖 قراءة 20 دقيقة في تطوير الذات", priority: "medium" }
+        ];
+        saveTasks();
+        const storedUser = localStorage.getItem(STORAGE_USER);
+        if(storedUser) userProfile = JSON.parse(storedUser);
+        updateUserUI();
+        renderTasks();
+    }
+    function saveTasks() { localStorage.setItem(STORAGE_TASKS, JSON.stringify(tasks)); }
+    function saveUser() { localStorage.setItem(STORAGE_USER, JSON.stringify(userProfile)); updateUserUI(); generateDynamicAdvice(); }
+    
+    function renderTasks() {
+        const taskListEl = document.getElementById("taskList");
+        if(tasks.length === 0) { taskListEl.innerHTML = '<li>✅ لا توجد مهام</li>'; return; }
+        const order = { high: 1, medium: 2, low: 3 };
+        const sorted = [...tasks].sort((a,b) => order[a.priority] - order[b.priority]);
+        taskListEl.innerHTML = "";
+        sorted.forEach(task => {
+            const li = document.createElement("li");
+            li.className = `task-item priority-${task.priority}`;
+            li.innerHTML = `<span class="task-text">${task.text}</span>
+                <div class="task-actions">
+                    <button class="complete-task" data-id="${task.id}">✔️</button>
+                    <button class="delete-task" data-id="${task.id}">🗑️</button>
+                </div>`;
+            taskListEl.appendChild(li);
+        });
+        document.querySelectorAll(".complete-task").forEach(btn => btn.onclick = () => completeTask(parseInt(btn.dataset.id)));
+        document.querySelectorAll(".delete-task").forEach(btn => btn.onclick = () => deleteTask(parseInt(btn.dataset.id)));
+    }
+    
+    function addTask(text, priority) { if(!text.trim()) return; tasks.push({ id: Date.now(), text: text.trim(), priority: priority }); saveTasks(); renderTasks(); generateDynamicAdvice(); }
+    function completeTask(id) { tasks = tasks.filter(t => t.id !== id); saveTasks(); renderTasks(); generateDynamicAdvice(); }
+    function deleteTask(id) { tasks = tasks.filter(t => t.id !== id); saveTasks(); renderTasks(); generateDynamicAdvice(); }
+    
+    function updateUserUI() {
+        document.getElementById("userName").innerText = userProfile.name || "غير محدد";
+        document.getElementById("userGoal").innerText = userProfile.goal || "غير محدد";
+        document.getElementById("membershipStatus").innerHTML = userProfile.membership ? '<span style="color:#FFD966;">👑 عضوية ذهبية</span>' : 'عادية';
+        let advice = userProfile.goal ? "✨ " + userProfile.goal + " – ابدأ خطوة اليوم." : "أجب على الأسئلة للحصول على نصائح مخصصة.";
+        if(userProfile.membership) advice += " ⭐ (مميز)";
+        document.getElementById("customAdvice").innerHTML = advice;
+    }
+    
+    function generateDynamicAdvice() {
+        const highTasks = tasks.filter(t => t.priority === "high");
+        let msg = highTasks.length ? `🔥 أولويتك: ${highTasks[0].text}` : (tasks.length ? `✨ أكمِل: ${tasks[0].text}` : "🎯 حدد هدفاً جديداً");
+        if(userProfile.membership) msg += " ⭐";
+        document.getElementById("dynamicAdvice").innerText = msg;
+    }
+    
+    function updateClock() {
+        const now = new Date();
+        let h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
+        h = h<10?'0'+h:h; m = m<10?'0'+m:m; s = s<10?'0'+s:s;
+        document.getElementById("clock").innerText = `${h}:${m}:${s}`;
+        document.getElementById("fullDate").innerHTML = now.toLocaleDateString('ar-SA', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+    }
+    
+    function shouldShowQuestionnaire() { return !userProfile.name || !userProfile.lastAsked || (new Date() - new Date(userProfile.lastAsked)) > 86400000; }
+    function showQuizModal() { document.getElementById("quizModal").classList.remove("hidden"); }
+    function hideQuizModal() { document.getElementById("quizModal").classList.add("hidden"); }
+    function showSubscribeModal() { document.getElementById("subscribeModal").classList.remove("hidden"); }
+    function hideSubscribeModal() { document.getElementById("subscribeModal").classList.add("hidden"); }
+    
+    function saveAnswers() {
+        const name = document.getElementById("qName").value.trim();
+        const goal = document.getElementById("qGoal").value.trim();
+        if(!name) { alert("الاسم ضروري"); return; }
+        userProfile.name = name; userProfile.goal = goal || ""; userProfile.lastAsked = new Date().toISOString();
+        saveUser(); hideQuizModal(); generateDynamicAdvice();
+    }
+    
+    function subscribeMembership() {
+        // محاكاة الدفع - في الحقيقة ستوجه المستخدم لصفحة الدفع
+        alert("⭐ سيتم توجيهك إلى صفحة الدفع الآمن.\n(عبر PayPal أو Ko-fi)\nبعد إتمام الدفع، سيتم تفعيل العضوية الذهبية.");
+        // هنا يمكن إضافة رابط الدفع الحقيقي
+        window.open("https://ko-fi.com/nourdine90", "_blank");
+        // محاكاة تفعيل العضوية (في التطبيق الحقيقي، سيتم بعد تأكيد الدفع)
+        setTimeout(() => {
+            if(confirm("هل أكملت عملية الدفع؟")) {
+                userProfile.membership = true;
+                saveUser();
+                alert("🎉 تهانينا! عضوية ذهبية مفعلة الآن.");
+                hideSubscribeModal();
+            }
+        }, 3000);
+    }
+    
+    document.getElementById("addTaskBtn").onclick = () => { addTask(document.getElementById("taskName").value, document.getElementById("taskPriority").value); document.getElementById("taskName").value = ""; };
+    document.getElementById("editProfileBtn").onclick = () => { showQuizModal(); document.getElementById("qName").value = userProfile.name || ""; document.getElementById("qGoal").value = userProfile.goal || ""; };
+    document.getElementById("subscribeBtn").onclick = showSubscribeModal;
+    document.getElementById("subscribeConfirmBtn").onclick = subscribeMembership;
+    document.getElementById("closeSubscribeModal").onclick = hideSubscribeModal;
+    document.getElementById("saveAnswers").onclick = saveAnswers;
+    
+    loadData();
+    setInterval(updateClock, 1000);
+    updateClock();
+    setTimeout(() => { if(shouldShowQuestionnaire()) showQuizModal(); else generateDynamicAdvice(); }, 500);
+</script>
+</body>
+</html>
